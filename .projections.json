@@ -1,0 +1,6 @@
+{
+  "*.c": {
+    "make": "gcc -Wall -o %:r %",
+    "dispatch": "%:p:r"
+  }
+}
