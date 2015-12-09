@@ -24,16 +24,15 @@ int main()
             f--;
         }
 
-        // as soon as we're below ground (-1) output how many instructions it took
-        if (f < 0) {
-            printf("floor: %d\n", f);
-            printf("position: %d\n", p);
-            return 0;
-        }
-
-    } while (c != EOF);
+    } while (c != EOF && f >= 0); // also step out if Santa steps below ground
     fclose(input);
 
-    puts("Never went below ground level or I screwed up counting");
-    return 2;
+    if (c == EOF) {
+        puts("never went below ground or counting mistake");
+        return 1;
+    }
+
+    printf("floor: %d\n", f);
+    printf("position: %d\n", p);
+    return 0;
 }
