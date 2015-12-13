@@ -8,18 +8,12 @@ int main()
     int t = 0; // total paper counter
     int p = 0; // current paper counter
     int d[3] = {0, 0, 0}; // dimensions
+
     char* line = NULL;
-    FILE* input;
     size_t len = 0;
     ssize_t read;
 
-    input = fopen("input.txt", "r");
-    if (input == NULL) {
-        puts("Error opening file!");
-        return 1;
-    }
-
-    while ((read = getline(&line, &len, input)) != -1) {
+    while ((read = getline(&line, &len, stdin)) != -1) {
         printf("Retrieved line of length %zu: %s", read, line);
         sscanf(line, "%dx%dx%d", &d[0], &d[1], &d[2]);
         printf("x:%d, y:%d, z:%d\n", d[0], d[1], d[2]);
@@ -29,8 +23,6 @@ int main()
     }
 
     printf("total: %d\n", t);
-
-    fclose(input);
 
     return 0;
 }
