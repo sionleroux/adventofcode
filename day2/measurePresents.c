@@ -1,9 +1,11 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 int totalPaper(int, int, int);
 int smallestSide(int, int, int);
 int smallestPerimiter(int, int, int);
 int cubicVolume(int, int, int);
+int compare_ints(const void*, const void*);
 
 int main()
 {
@@ -20,7 +22,9 @@ int main()
     while ((read = getline(&line, &len, stdin)) != -1) {
         printf("Retrieved line of length %zu: %s", read, line);
         sscanf(line, "%dx%dx%d", &d[0], &d[1], &d[2]);
-        printf("x:%d, y:%d, z:%d\n", d[0], d[1], d[2]);
+        printf("dimensions: x:%d, y:%d, z:%d\n", d[0], d[1], d[2]);
+        qsort(d, 3, sizeof(int), compare_ints);
+        printf("sorted: x:%d, y:%d, z:%d\n", d[0], d[1], d[2]);
         p = totalPaper(d[0], d[1], d[2]);
         r =
             smallestPerimiter(d[0], d[1], d[2]) +
@@ -90,4 +94,14 @@ int smallestPerimiter(int a, int b, int c) {
  */
 int cubicVolume(int a, int b, int c) {
     return a * b * c;
+}
+
+/**
+ * No fancy safeguard tricks here because for this program I know my
+ * ints will always be positive (a box can't have negative dimensions)
+ */
+int compare_ints(const void* a, const void* b) {
+    int *x = (int *) a;
+    int *y = (int *) b;
+    return *x - *y;
 }
