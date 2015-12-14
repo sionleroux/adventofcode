@@ -2,11 +2,15 @@
 
 int totalPaper(int, int, int);
 int smallestSide(int, int, int);
+int smallestPerimiter(int, int, int);
+int cubicVolume(int, int, int);
 
 int main()
 {
-    int t = 0; // total paper counter
+    int tp = 0; // total paper counter
     int p = 0; // current paper counter
+    int tr = 0; // total ribbon counter
+    int r = 0; // current ribbon counter
     int d[3] = {0, 0, 0}; // dimensions
 
     char* line = NULL;
@@ -18,11 +22,17 @@ int main()
         sscanf(line, "%dx%dx%d", &d[0], &d[1], &d[2]);
         printf("x:%d, y:%d, z:%d\n", d[0], d[1], d[2]);
         p = totalPaper(d[0], d[1], d[2]);
+        r =
+            smallestPerimiter(d[0], d[1], d[2]) +
+            cubicVolume(d[0], d[1], d[2]);
         printf("paper: %d\n", p);
-        t = t+p;
+        printf("ribbon: %d\n", r);
+        tp = tp+p;
+        tr = tr+r;
     }
 
-    printf("total: %d\n", t);
+    printf("total paper: %d\n", tp); // correct: 1588178
+    printf("total ribbon: %d\n", tr); // correct: 3783758
 
     return 0;
 }
@@ -59,4 +69,25 @@ int smallestSide(int a, int b, int c) {
     } else {
         return c;
     }
+}
+
+/**
+ * Excludes the biggest number and multiplies the rest by 2 to find
+ * the smallest perimiter.  This algorithm is not dry at all :-(
+ */
+int smallestPerimiter(int a, int b, int c) {
+    if (a >= b && a >= c) {
+        return 2*(b+c);
+    } else if (b >= a && b >= c) {
+        return 2*(a+c);
+    } else {
+        return 2*(a+b);
+    }
+}
+
+/**
+ * Multiple X, Y & Z to get volume (for the bow in the ribbon)
+ */
+int cubicVolume(int a, int b, int c) {
+    return a * b * c;
 }
