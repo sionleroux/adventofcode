@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define CUBOID 3 // a cuboid has 3 dimensions: x,y,z
+
 int totalPaper(int, int, int);
 int smallestSide(int, int, int);
 int smallestPerimiter(int, int, int);
@@ -13,7 +15,7 @@ int main()
     int p = 0; // current paper counter
     int tr = 0; // total ribbon counter
     int r = 0; // current ribbon counter
-    int d[3] = {0, 0, 0}; // dimensions
+    int d[CUBOID] = {0, 0 ,0}; // dimensions
 
     char* line = NULL;
     size_t len = 0;
@@ -23,7 +25,7 @@ int main()
         printf("Retrieved line of length %zu: %s", read, line);
         sscanf(line, "%dx%dx%d", &d[0], &d[1], &d[2]);
         printf("dimensions: x:%d, y:%d, z:%d\n", d[0], d[1], d[2]);
-        qsort(d, 3, sizeof(int), compare_ints);
+        qsort(d, CUBOID, sizeof(int), compare_ints);
         printf("sorted: x:%d, y:%d, z:%d\n", d[0], d[1], d[2]);
         p = totalPaper(d[0], d[1], d[2]);
         r =
