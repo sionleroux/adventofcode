@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define VERBOSE 2 // verbosit level (lots of output trips at 2)
 #define CUBOID 3 // a cuboid has 3 dimensions: x,y,z
 
 int totalPaper(int, int, int);
@@ -22,19 +23,21 @@ int main()
     ssize_t read;
 
     while ((read = getline(&line, &len, stdin)) != -1) {
-        printf("Retrieved line of length %zu: %s", read, line);
         sscanf(line, "%dx%dx%d", &d[0], &d[1], &d[2]);
-        printf("dimensions: x:%d, y:%d, z:%d\n", d[0], d[1], d[2]);
         qsort(d, CUBOID, sizeof(int), compare_ints);
-        printf("sorted: x:%d, y:%d, z:%d\n", d[0], d[1], d[2]);
         p = totalPaper(d[0], d[1], d[2]);
         r =
             smallestPerimiter(d[0], d[1], d[2]) +
             cubicVolume(d[0], d[1], d[2]);
-        printf("paper: %d\n", p);
-        printf("ribbon: %d\n", r);
         tp = tp+p;
         tr = tr+r;
+#if VERBOSE >= 2
+        printf("dimensions: x:%d, y:%d, z:%d\n", d[0], d[1], d[2]);
+        printf("Retrieved line of length %zu: %s", read, line);
+        printf("sorted: x:%d, y:%d, z:%d\n", d[0], d[1], d[2]);
+        printf("paper: %d\n", p);
+        printf("ribbon: %d\n", r);
+#endif
     }
 
     printf("total paper: %d\n", tp); // correct: 1588178
