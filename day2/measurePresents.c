@@ -4,10 +4,9 @@
 #define VERBOSE 2 // verbosit level (lots of output trips at 2)
 #define CUBOID 3 // a cuboid has 3 dimensions: x,y,z
 
-int totalPaper(int, int, int);
-int smallestSide(int, int, int);
-int smallestPerimiter(int, int, int);
-int cubicVolume(int, int, int);
+int totalPaper(int*);
+int smallestPerimiter(int*);
+int cubicVolume(int*);
 int compare_ints(const void*, const void*);
 
 int main()
@@ -25,10 +24,8 @@ int main()
     while ((read = getline(&line, &len, stdin)) != -1) {
         sscanf(line, "%dx%dx%d", &d[0], &d[1], &d[2]);
         qsort(d, CUBOID, sizeof(int), compare_ints);
-        p = totalPaper(d[0], d[1], d[2]);
-        r =
-            smallestPerimiter(d[0], d[1], d[2]) +
-            cubicVolume(d[0], d[1], d[2]);
+        p = totalPaper(d);
+        r = smallestPerimiter(d) + cubicVolume(d);
         tp = tp+p;
         tr = tr+r;
 #if VERBOSE >= 2
@@ -52,53 +49,36 @@ int main()
  *   - area of the cuboid 2xy + 2yz + 2xz
  *   - some slack (the area of the smallest side)
  */
-int totalPaper(int x, int y, int z) {
+int totalPaper(int* d) {
 
-    int a = x*y;
-    int b = x*z;
-    int c = z*y;
+    int a = d[0]*d[1];
+    int b = d[0]*d[2];
+    int c = d[1]*d[2];
 
-    // get smallest side
-    int s = smallestSide(a, b, c);
+#if VERBOSE >= 2
+    printf("Smallest of %dx%dx%d is: %d\n", a, b, c, a);
+#endif
 
-    return 2*a + 2*b + 2*c + s;
-}
-
-/**
- * Simply returns the smallest of 3 numbers.
- * Would be cool if it could do an array of arbitrary size.
- * Used for finding which side of a cuboid is smallest.
- * Uses <= instead of < because somesides small sides have equal length
- */
-int smallestSide(int a, int b, int c) {
-    if (a <= b && a <= c) {
-        return a;
-    } else if (b <= a && b <= c) {
-        return b;
-    } else {
-        return c;
-    }
+    return 2*a + 2*b + 2*c + a; // a is the smallest side
 }
 
 /**
  * Excludes the biggest number and multiplies the rest by 2 to find
- * the smallest perimiter.  This algorithm is not dry at all :-(
+ * the smallest perimiter.
  */
-int smallestPerimiter(int a, int b, int c) {
-    if (a >= b && a >= c) {
-        return 2*(b+c);
-    } else if (b >= a && b >= c) {
-        return 2*(a+c);
-    } else {
-        return 2*(a+b);
-    }
+int smallestPerimiter(int* d) {
+    return 2 * (d[0] + d[1]);
 }
 
 /**
  * Multiple X, Y & Z to get volume (for the bow in the ribbon)
  */
-int cubicVolume(int a, int b, int c) {
-    return a * b * c;
+int cubicVolume(int* d) {
+    int v = 1; // volume holder
+    for (int i = 0; i < CUBOID; ++i) {
+        v *= d[i];
+    }
+    return v;
 }
 
 /**
