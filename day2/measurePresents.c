@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define VERBOSE 2 // verbosit level (lots of output trips at 2)
+#define VERBOSE 1 // verbosity level (lots of output trips at 2)
 #define CUBOID 3 // a cuboid has 3 dimensions: x,y,z
+#define NUMSIDES CUBOID // this might be a level of abstraction to many!
 
 int totalPaper(int*);
 int smallestPerimiter(int*);
@@ -15,7 +16,7 @@ int main()
     int p = 0; // current paper counter
     int tr = 0; // total ribbon counter
     int r = 0; // current ribbon counter
-    int d[CUBOID] = {0, 0 ,0}; // dimensions
+    int d[NUMSIDES] = {0, 0 ,0}; // dimensions
 
     char* line = NULL;
     size_t len = 0;
@@ -23,7 +24,7 @@ int main()
 
     while ((read = getline(&line, &len, stdin)) != -1) {
         sscanf(line, "%dx%dx%d", &d[0], &d[1], &d[2]);
-        qsort(d, CUBOID, sizeof(int), compare_ints);
+        qsort(d, NUMSIDES, sizeof(int), compare_ints);
         p = totalPaper(d);
         r = smallestPerimiter(d) + cubicVolume(d);
         tp = tp+p;
@@ -75,7 +76,7 @@ int smallestPerimiter(int* d) {
  */
 int cubicVolume(int* d) {
     int v = 1; // volume holder
-    for (int i = 0; i < CUBOID; ++i) {
+    for (int i = 0; i < NUMSIDES; ++i) {
         v *= d[i];
     }
     return v;
