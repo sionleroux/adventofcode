@@ -11,7 +11,7 @@ struct house {
 void arrow_to_coords(char, int*);
 void house_free(house*);
 house* house_init(int, int);
-house* house_add(house*, int, int);
+int house_add(house*, int, int);
 house* house_find(house*, int, int);
 house* house_last(house*);
 int house_count(house*);
@@ -19,23 +19,24 @@ int house_count(house*);
 int main()
 {
 
+    int count = 1; // houses visited
     char c; // character read from stdin
     int m[2]; // movement coords
     house* h = house_init(0, 0);
     house* l; // current house I'm at aka last house
 
-    printf("init %d:%d #%d\n", h->x, h->y);
+    printf("init %d:%d #%d\n", h->x, h->y, count);
 
     while ((c = fgetc(stdin)) != EOF) {
         arrow_to_coords(c, m);
         if (m[0] + m[1] == 0) // {0, 0} Wait
             continue;
-        house_add(h, (h->x + m[0]), (h->y + m[1]));
+        count += house_add(h, m[0], m[1]);
         l = house_last(h);
-        printf("%c %d:%d #%d\n", c, l->x, l->y);
+        printf("%c %d:%d #%d\n", c, l->x, l->y, count);
     }
 
-    printf("house count: %d\n", house_count(h));
+    printf("house count: %d\n", count);
 
     house_free(h);
 
@@ -96,12 +97,22 @@ house* house_init(int x, int y)
  * Adds a new house to the list of visited houses.
  * Expects a pointer to the first house in the list and the current
  * cooridinates.
- * Returns a pointer to the last house.
+ * Returns 1 if this house hasn't been visited before, otherwise 0.
  */
-void house_add(house *f, int x, int y)
+int house_add(house *f, int x, int y)
 {
+    int unique = 0;
     house *last = house_last(f);
-    last->next = house_init(last->x + x, last->y + y);
+    house *new = house_init(last->x + x, last->y + y);
+
+    // check if it's already in the list
+    if (!house_find(f, new->x, new->y))
+        unique = 1;
+
+    // add to the list
+    last->next = new;
+
+    return unique;
 }
 
 /**
