@@ -16,16 +16,23 @@ house* house_find(house*, int, int);
 house* house_last(house*);
 int house_count(house*);
 
-int main()
+int main(int argc, char *argv[])
 {
 
+    int santas = 0; // from args, number of people walking
     int count = 1; // houses visited
     char c; // character read from stdin
     int m[2]; // movement coords
     house* h = house_init(0, 0);
     house* l; // current house I'm at aka last house
 
-    printf("init %d:%d #%d\n", h->x, h->y, count);
+    if (argc < 2) {
+        santas = 1;
+    } else {
+        santas = atoi(argv[1]);
+    }
+
+    house* houses[santas];
 
     while ((c = fgetc(stdin)) != EOF) {
         arrow_to_coords(c, m);
@@ -33,7 +40,7 @@ int main()
             continue;
         count += house_add(h, m[0], m[1]);
         l = house_last(h);
-        printf("%c %d:%d #%d\n", c, l->x, l->y, count);
+        /* printf("%c %d:%d #%d\n", c, l->x, l->y, count); */
     }
 
     printf("house count: %d\n", count);
