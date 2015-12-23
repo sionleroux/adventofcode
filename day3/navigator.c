@@ -5,7 +5,6 @@ typedef struct house house;
 struct house {
     int x;
     int y;
-    int count; // how many times visited
     house* next;
 };
 
@@ -25,7 +24,7 @@ int main()
     house* h = house_init(0, 0);
     house* l; // current house I'm at aka last house
 
-    printf("init %d:%d #%d\n", h->x, h->y, h->count);
+    printf("init %d:%d #%d\n", h->x, h->y);
 
     while ((c = fgetc(stdin)) != EOF) {
         arrow_to_coords(c, m);
@@ -33,7 +32,7 @@ int main()
             continue;
         house_add(h, (h->x + m[0]), (h->y + m[1]));
         l = house_last(h);
-        printf("%c %d:%d #%d\n", c, l->x, l->y, l->count);
+        printf("%c %d:%d #%d\n", c, l->x, l->y);
     }
 
     printf("house count: %d\n", house_count(h));
@@ -86,7 +85,6 @@ house* house_init(int x, int y)
 {
     house *h = malloc(sizeof(house));
 
-    h->count = 1;
     h->next = NULL;
     h->x = x;
     h->y = y;
@@ -100,53 +98,40 @@ house* house_init(int x, int y)
  * cooridinates.
  * Returns a pointer to the last house.
  */
-house* house_add(house *f, int x, int y)
+void house_add(house *f, int x, int y)
 {
-    /* puts("I'm here"); */
-    house *found = house_find(f, x, y);
-    house *last;
-
-    if (found) {
-        printf("found ");
-        found->count++;
-        return found;
-    } else {
-        printf("new ");
-        last = house_last(f);
-        last->next = house_init(last->x + x, last->y + y);
-        /* printf("last: %d:%d %zd\n", last->x, last->y, (size_t) last->next); */
-
-        //XXX DEBUG
-        last = house_last(f);
-        /* printf("last: %d:%d %zd\n", last->x, last->y, (size_t) last->next); */
-        /* printf("updated first: %d:%d %zd.%zd\n", first.x, first.y, (size_t) first, (size_t) first.next); */
-
-        return last;
-    }
+    house *last = house_last(f);
+    last->next = house_init(last->x + x, last->y + y);
 }
 
+/**
+ * Finds a house by cooridinates.
+ * Expects a pointer to the first house in the list and integers for x
+ * and y coordinates.
+ * Returns a pointer to a house matching the provided coordinates or
+ * NULL if not found.
+ */
 house* house_find(house *h, int x, int y)
 {
-    /* puts("finding"); */
-    /* printf("finding %d:%d in %zd\n", x, y, (size_t) &h); */
     int c = 0;
 
     house *i = h;
 
     while (i != NULL) {
-        /* printf("checking %d:%d in %zd->%zd\n", i->x, i->y, (size_t) &i, (size_t) i->next); */
         if (i->x == x && i->y == y)
             return i;
 
         i = i->next;
         c++;
-        /* if (c > 4) // XXX temp break stop overflow soon */
-        /*     break; */
     }
 
     return NULL;
 }
 
+/**
+ * Returns a pointer to the last house in a list of houses.
+ * Expects a pointer to the start of a list of houses.
+ */
 house* house_last(house *h)
 {
     house *i = h;
@@ -157,6 +142,11 @@ house* house_last(house *h)
     return i;
 }
 
+/**
+ * Counts the number of houses in a list of houses.
+ * Expects a pointer to the first house in a list of houses.
+ * Returns the number of unique houses.
+ */
 int house_count(house *h)
 {
     house *i = h;
@@ -169,3 +159,5 @@ int house_count(house *h)
 
     return c;
 }
+
+// vim:tw=72
