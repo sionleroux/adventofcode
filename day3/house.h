@@ -18,3 +18,7 @@ house* house_join(house**, int);
 int    house_count(house*);
 
 #endif /* _HOUSE_H */
+
+#ifndef HOUSE_VERBOSE
+#define HOUSE_VERBOSE 1 // verbosity level (lots of output trips at 2)
+#endif

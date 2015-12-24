@@ -12,7 +12,9 @@ static void   house_pop(house*);
  * Frees a list of houses from memory, starting at the provided house.
  */
 void house_free(house *first) {
+#if HOUSE_VERBOSE >= 2
     puts("free");
+#endif
     house *curr, *head = first;
     while ((curr = head) != NULL) {
         head = head->next;
@@ -27,7 +29,9 @@ void house_free(house *first) {
  * Returns a pointer to the new house.
  */
 house* house_init(int x, int y) {
+#if HOUSE_VERBOSE >= 2
     puts("init");
+#endif
     house *h = malloc(sizeof(house));
 
     h->next = NULL;
@@ -44,7 +48,9 @@ house* house_init(int x, int y) {
  * Returns 1 if this house hasn't been visited before, otherwise 0.
  */
 void house_add(house *f, int x, int y) {
+#if HOUSE_VERBOSE >= 2
     puts("add");
+#endif
     house *last = house_last(f);
     last->next = house_init(last->x + x, last->y + y);
 }
@@ -57,7 +63,9 @@ void house_add(house *f, int x, int y) {
  * NULL if not found.
  */
 static house* house_find(house *h, int x, int y) {
+#if HOUSE_VERBOSE >= 2
     puts("find");
+#endif
     house *i = h;
 
     while (i != NULL) {
@@ -76,7 +84,9 @@ static house* house_find(house *h, int x, int y) {
  * Expects a pointer to the start of a list of houses.
  */
 static house* house_last(house *h) {
+#if HOUSE_VERBOSE >= 2
     puts("last");
+#endif
     house *i = h;
 
     while (i->next != NULL)
@@ -93,7 +103,9 @@ static house* house_last(house *h) {
  * Returns the parent of the target house or NULL if not found.
  */
 static house* house_parent(house *f, house *t) {
+#if HOUSE_VERBOSE >= 2
     puts("parent");
+#endif
     house *i = f; // is this even necessary?
 
     while (i && i->next != t)
@@ -109,10 +121,10 @@ static house* house_parent(house *f, house *t) {
  * forwards.
  */
 static void house_pop(house *parent) {
+#if HOUSE_VERBOSE >= 2
     puts("pop");
+#endif
     house *target = parent->next;
-    if (target == NULL)
-        puts("target is NULL");
     parent->next = target->next;
     free(target);
 }
@@ -124,7 +136,9 @@ static void house_pop(house *parent) {
  * Operates on the provided list, so be careful what you pass it.
  */
 void house_uniq(house *f) {
+#if HOUSE_VERBOSE >= 2
     puts("uniq");
+#endif
     house *i = f;
     house *d = NULL; // potential duplicate
 
@@ -132,7 +146,6 @@ void house_uniq(house *f) {
 
         // pop any duplicates further on in the list (next)
         while ((d = house_find(i->next, i->x, i->y)) != NULL) {
-            puts("find duplicate");
             house_pop(house_parent(f, d));
         }
 
@@ -146,7 +159,9 @@ void house_uniq(house *f) {
  * Expects an array of house lists and the size of the array.
  */
 house* house_join(house** h, int size) {
+#if HOUSE_VERBOSE >= 2
     puts("join");
+#endif
     house* l; // last house of previous
 
     for (int i = 1; i < size; ++i) {
@@ -164,7 +179,9 @@ house* house_join(house** h, int size) {
  * Returns the number of unique houses.
  */
 int house_count(house *h) {
+#if HOUSE_VERBOSE >= 2
     puts("count");
+#endif
     house *i = h;
     int c = 1; // number of houses
 

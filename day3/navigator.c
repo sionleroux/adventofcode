@@ -24,10 +24,10 @@ int main(int argc, char *argv[]) {
         ha[i] = house_init(0, 0); // starting house
 
     while ((c = fgetc(stdin)) != EOF) {
+
         arrow_to_coords(c, m);
         if (m[0] + m[1] == 0) // {0, 0} Wait
             continue;
-        printf("s%d %d:%d\n", s, m[0], m[1]);
         house_add(ha[s], m[0], m[1]);
 
         // give each house to the next santa
@@ -35,14 +35,12 @@ int main(int argc, char *argv[]) {
         if (s >= santas)
             s = 0;
 
-        puts("---");
-
     }
 
     h = house_join(ha, santas);
     house_uniq(h);
 
-    printf("house count: %d\n", house_count(h));
+    printf("%d\n", house_count(h));
 
     for (int i = 0; i < santas; ++i)
         house_free(ha[i]);
@@ -55,7 +53,6 @@ int main(int argc, char *argv[]) {
  * coordinates.
  */
 void arrow_to_coords(char direction, int *coords) {
-    puts("move");
     switch (direction) {
         case '^': // North
             coords[0] = 0;
