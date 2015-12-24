@@ -1,16 +1,24 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "house.h"
 
 void arrow_to_coords(char, int*);
 
-int main() {
+int main(int argc, char *argv[]) {
 
     char c; // character read from stdin
-    int santas = 2; // number of people walking
+    int santas; // number of people walking
     int s = 0; // current santa
-    int m[santas]; // movement coords
-    house* ha[santas]; // array of house lists
+    int m[2]; // movement coords
     house* h; // final combined list of houses
+
+    // Get number of Santas from args or default to 1
+    if (argc > 1) {
+        santas = atoi(argv[1]);
+    } else {
+        santas = 1;
+    }
+    house* ha[santas]; // array of house lists
 
     for (int i = 0; i < santas; ++i)
         ha[i] = house_init(0, 0); // starting house
