@@ -183,7 +183,7 @@ void house_pop(house *parent) {
     if (target == NULL)
         puts("target is NULL");
     parent->next = target->next;
-    house_free(target);
+    free(target);
 }
 
 /**
