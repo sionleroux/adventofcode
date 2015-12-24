@@ -13,6 +13,8 @@ struct house {
 void   house_free(house*);
 house* house_init(int, int);
 void   house_add(house*, int, int);
-int    house_count(house*, house*);
+void   house_uniq(house*);
+house* house_join(house**, int);
+int    house_count(house*);
 
 #endif /* _HOUSE_H */

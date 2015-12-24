@@ -7,7 +7,6 @@ static house* house_find(house*, int, int);
 static house* house_last(house*);
 static house* house_parent(house*, house*);
 static void   house_pop(house*);
-static void   house_uniq(house*);
 
 /**
  * Frees a list of houses from memory, starting at the provided house.
@@ -124,7 +123,7 @@ static void house_pop(house *parent) {
  * Expects a list of houses.
  * Operates on the provided list, so be careful what you pass it.
  */
-static void house_uniq(house *f) {
+void house_uniq(house *f) {
     puts("uniq");
     house *i = f;
     house *d = NULL; // potential duplicate
@@ -142,24 +141,32 @@ static void house_uniq(house *f) {
 }
 
 /**
+ * Joins an array of house lists into a single list of houses by linking
+ * each element's first house to the last house of the previous one.
+ * Expects an array of house lists and the size of the array.
+ */
+house* house_join(house** h, int size) {
+    puts("join");
+    house* l; // last house of previous
+
+    for (int i = 1; i < size; ++i) {
+        // link the house to the end of the previous
+        l = house_last(h[i-1]);
+        l->next = h[i];
+    }
+
+    return h[0];
+}
+
+/**
  * Counts the number of houses in a list of houses.
  * Expects a pointer to the first house in a list of houses.
  * Returns the number of unique houses.
  */
-int house_count(house *h, house *r) {
+int house_count(house *h) {
     puts("count");
     house *i = h;
     int c = 1; // number of houses
-
-    // TODO: make this work with an array of any size
-    // TODO: out of scope of function
-    // link the two house lists
-    house *l = house_last(h);
-    l->next = r;
-
-    // TODO: out of scope of function
-    // strip duplicates from the long house list in place :-O
-    house_uniq(h);
 
     while (i->next != NULL) {
         i = i->next;
