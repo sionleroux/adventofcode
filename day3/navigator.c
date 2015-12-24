@@ -19,8 +19,7 @@ house* house_parent(house*, house*);
 void house_pop(house*);
 void house_uniq(house*);
 
-int main()
-{
+int main() {
 
     char c; // character read from stdin
     int santas = 2; // number of people walking
@@ -34,12 +33,15 @@ int main()
         arrow_to_coords(c, m);
         if (m[0] + m[1] == 0) // {0, 0} Wait
             continue;
+        printf("s%d %d:%d\n", s, m[0], m[1]);
         house_add(h[s], m[0], m[1]);
 
         // give each house to the next santa
         s++;
         if (s >= santas)
             s = 0;
+
+        puts("---");
 
     }
 
@@ -56,6 +58,7 @@ int main()
  * coordinates.
  */
 void arrow_to_coords(char direction, int *coords) {
+    puts("move");
     switch (direction) {
         case '^': // North
             coords[0] = 0;
@@ -81,8 +84,8 @@ void arrow_to_coords(char direction, int *coords) {
 }
 
 // unneeded because I use only stack memory so far
-void house_free(house *first)
-{
+void house_free(house *first) {
+    puts("free");
     house *curr, *head = first;
     while ((curr = head) != NULL) {
         head = head->next;
@@ -90,8 +93,8 @@ void house_free(house *first)
     }
 }
 
-house* house_init(int x, int y)
-{
+house* house_init(int x, int y) {
+    printf("init %d:%d\n", x, y);
     house *h = malloc(sizeof(house));
 
     h->next = NULL;
@@ -107,8 +110,8 @@ house* house_init(int x, int y)
  * cooridinates.
  * Returns 1 if this house hasn't been visited before, otherwise 0.
  */
-void house_add(house *f, int x, int y)
-{
+void house_add(house *f, int x, int y) {
+    puts("add");
     house *last = house_last(f);
     last->next = house_init(last->x + x, last->y + y);
 }
@@ -120,12 +123,11 @@ void house_add(house *f, int x, int y)
  * Returns a pointer to a house matching the provided coordinates or
  * NULL if not found.
  */
-house* house_find(house *h, int x, int y)
-{
+house* house_find(house *h, int x, int y) {
+    puts("find");
     house *i = h;
 
     while (i != NULL) {
-    house *i = h;
 
         if (i->x == x && i->y == y)
             return i;
@@ -140,8 +142,8 @@ house* house_find(house *h, int x, int y)
  * Returns a pointer to the last house in a list of houses.
  * Expects a pointer to the start of a list of houses.
  */
-house* house_last(house *h)
-{
+house* house_last(house *h) {
+    puts("last");
     house *i = h;
 
     while (i->next != NULL)
@@ -157,8 +159,8 @@ house* house_last(house *h)
  * to search for in that list.
  * Returns the parent of the target house or NULL if not found.
  */
-house* house_parent(house *f, house *t)
-{
+house* house_parent(house *f, house *t) {
+    puts("parent");
     house *i = f; // is this even necessary?
 
     while (i && i->next != t)
@@ -173,9 +175,13 @@ house* house_parent(house *f, house *t)
  * the house to be popped, necessary because the list only links
  * forwards.
  */
-void house_pop(house *parent)
-{
+void house_pop(house *parent) {
+    puts("pop");
+    printf("parent: %d:%d\n", parent->x, parent->y);
     house *target = parent->next;
+    printf("target: %d:%d\n", target->x, target->y);
+    if (target == NULL)
+        puts("target is NULL");
     parent->next = target->next;
     house_free(target);
 }
@@ -186,15 +192,19 @@ void house_pop(house *parent)
  * Expects a list of houses.
  * Operates on the provided list, so be careful what you pass it.
  */
-void house_uniq(house *f)
-{
+void house_uniq(house *f) {
+    puts("uniq");
     house *i = f;
-    house *d; // potential duplicate
+    house *d = NULL; // potential duplicate
 
-    while (i->next != NULL) {
+    while (i != NULL) {
+        /* puts("step in list"); */
+
+        printf("i %d:%d\n", i->x, i->y);
 
         // pop any duplicates further on in the list (next)
-        while ((d = house_find(i->next, i->x, i->y))) {
+        while ((d = house_find(i->next, i->x, i->y)) != NULL) {
+            puts("find duplicate");
             house_pop(house_parent(f, d));
         }
 
@@ -207,16 +217,18 @@ void house_uniq(house *f)
  * Expects a pointer to the first house in a list of houses.
  * Returns the number of unique houses.
  */
-int house_count(house *h, house *r)
-{
+int house_count(house *h, house *r) {
+    puts("count");
     house *i = h;
     int c = 1; // number of houses
 
     // TODO: make this work with an array of any size
+    // TODO: out of scope of function
     // link the two house lists
     house *l = house_last(h);
     l->next = r;
 
+    // TODO: out of scope of function
     // strip duplicates from the long house list in place :-O
     house_uniq(h);
 
