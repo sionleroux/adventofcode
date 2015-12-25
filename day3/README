@@ -1,0 +1,28 @@
+The Santa navigator program reads input like <<>V^V<<<>V in stdin and
+returns a number, the number number of houses Santa would have visited,
+following these instructions as:
+
+^ North
+> East
+v South
+< West
+
+For example:
+
+echo '>>' | ./navigator
+
+outputs: 3
+
+You can specify multiple Santas to travel simultaneously by providing
+the number of santas as an argument, e.g.:
+
+./navigator 2 <input.txt
+
+To compile from source, just run `make`.
+
+The code is based on a linked list of houses.  Every time a character is
+read, it is mapped to coordinates and a new house is added to the list
+with coordinates based on the last house and the current movement.  If
+there are multiple Santas they each take a turn to move.  Finally each
+Santa's house list is uniq'd into a long list of unique houses which is
+counted to provide the final result.
