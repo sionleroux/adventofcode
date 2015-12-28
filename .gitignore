@@ -1,8 +1,0 @@
-# Ignore everything
-day*/*
-
-# ...except C source code
-!day*/*.c
-
-# ...and input files
-!day*/input.txt
