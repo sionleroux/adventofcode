@@ -1,6 +1,0 @@
-{
-  "*.c": {
-    "make": "gcc -Wall -o %:r %",
-    "dispatch": "./%:r <%:h/input.txt"
-  }
-}
