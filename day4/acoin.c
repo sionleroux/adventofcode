@@ -7,16 +7,25 @@
 
 // CONSTANTS
 #define MD5_STRING_LENGTH MD5_DIGEST_LENGTH * 2 + 1
+#define KEY "iwrupvqb"
 
 // FUNCTIONS
 char* md5(char*, char*);
+char* chop(char*, char*);
+char* numcat(char*, char*, unsigned int);
 
 int main(void)
 {
     char hash[MD5_STRING_LENGTH];
-    char* string = "Hello World";
+    char s[6];
+    char key[17];
+    unsigned int c = 0;
 
-    printf("md5: %s\n", md5(hash, string));
+    while (strcmp( "00000", chop(s, md5(hash, numcat(key, KEY, c)))) != 0) {
+        c++;
+    }
+
+    printf("num: %d\nmd5: %s\n", c, md5(hash, key));
 
     return 0;
 }
@@ -41,6 +50,24 @@ char* md5(char *md5string, char *instring)
         sprintf(&md5string[i*2], "%02x", (unsigned int)digest[i]);
 
     return md5string;
+}
+
+/**
+ * Chops off everything after the first 5 characters of a string.
+ */
+char* chop(char *shortstring, char *md5string) {
+    strncpy(shortstring, md5string, 5);
+    shortstring[5] = '\0';
+    return shortstring;
+}
+
+/**
+ * Appends an unsigned integer number to the end of a string and returns
+ * the result.
+ */
+char* numcat(char *target, char *string, unsigned int number) {
+    sprintf(target, "%s%d", string, number);
+    return target;
 }
 
 // vim:tw=72
