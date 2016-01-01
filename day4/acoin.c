@@ -21,7 +21,7 @@ int main(void)
     char key[17];
     unsigned int c = 0;
 
-    while (strcmp( "00000", chop(s, md5(hash, numcat(key, KEY, c)))) != 0) {
+    while (strcmp( "000000", chop(s, md5(hash, numcat(key, KEY, c)))) != 0) {
         c++;
     }
 
@@ -56,8 +56,8 @@ char* md5(char *md5string, char *instring)
  * Chops off everything after the first 5 characters of a string.
  */
 char* chop(char *shortstring, char *md5string) {
-    strncpy(shortstring, md5string, 5);
-    shortstring[5] = '\0';
+    strncpy(shortstring, md5string, 6);
+    shortstring[6] = '\0';
     return shortstring;
 }
 
