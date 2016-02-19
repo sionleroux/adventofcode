@@ -1,4 +1,7 @@
-all: bin/nicestr bin/nicestr2
+all: bin/nicestr bin/nicestr2 tags
+
+tags: *.c
+	ctags -R .
 
 bin/nicestr: nicestr.c
 	mkdir -p bin
