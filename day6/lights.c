@@ -8,7 +8,7 @@ const int off = 0;
 void turn_on(int[][1000], int[], int[]);
 void turn_off(int[][1000], int[], int[]);
 void toggle(int[][1000], int[], int[]);
-int count_lights(int[][1000]);
+int count(int[][1000]);
 
 int main(int argc, char *argv[])
 {
@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 
     }
 
-    printf("%d\n", count_lights(lights));
+    printf("%d\n", count(lights));
 
     return 0;
 }
@@ -66,7 +66,7 @@ void toggle(int lights[][1000], int from[], int to[]) {
     }
 }
 
-int count_lights(int lights[][1000]) {
+int count(int lights[][1000]) {
     int c = 0;
 
     for (int x = 0; x <= 999; ++x) {
