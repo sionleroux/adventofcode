@@ -9,6 +9,7 @@ void turn_on(int[][1000], int[], int[]);
 void turn_off(int[][1000], int[], int[]);
 void toggle(int[][1000], int[], int[]);
 int count(int[][1000]);
+void init(int[][1000]);
 
 int main(int argc, char *argv[])
 {
@@ -20,6 +21,8 @@ int main(int argc, char *argv[])
     int lights[1000][1000];
     int from[2] = {0, 0};
     int to[2] = {0, 0};
+
+    init(lights);
 
     while ((read = getline(&line, &len, stdin)) != -1) {
         sscanf(line, "%[ togleurnf] %d,%d through %d,%d", action, &from[0], &from[1], &to[0], &to[1]);
@@ -40,6 +43,14 @@ int main(int argc, char *argv[])
     printf("%d\n", count(lights));
 
     return 0;
+}
+
+void init(int lights[][1000]) {
+    for (int x = 0; x <= 999; ++x) {
+        for (int y = 0; y <= 999; ++y) {
+            lights[x][y] = 0;
+        }
+    }
 }
 
 void turn_on(int lights[][1000], int from[], int to[]) {
