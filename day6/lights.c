@@ -2,28 +2,78 @@
 #include <stdlib.h>
 #include <string.h>
 
+const int on = 1;
+const int off = 0;
+
+void turn_on(int[][1000], int[], int[]);
+void turn_off(int[][1000], int[], int[]);
+void toggle(int[][1000], int[], int[]);
+int count_lights(int[][1000]);
+
 int main(int argc, char *argv[])
 {
     char* line = NULL;
     size_t len = 0;
     ssize_t read;
 
-    char action[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    char action[8];
+    int lights[1000][1000];
     int from[2] = {0, 0};
     int to[2] = {0, 0};
 
     while ((read = getline(&line, &len, stdin)) != -1) {
         sscanf(line, "%[ togleurnf] %d,%d through %d,%d", action, &from[0], &from[1], &to[0], &to[1]);
-        printf("action: %s, range: %d:%d->%d:%d\n", action, from[0], from[1], to[0], to[1]);
+
         if (strcmp(action, "turn on ") == 0) {
-            puts("on");
+            turn_on(lights, from, to);
         } else if (strcmp(action, "turn off ") == 0) {
-            puts("off");
+            turn_off(lights, from, to);
         } else if (strcmp(action, "toggle ") == 0) {
-            puts("toggle");
+            toggle(lights, from, to);
         } else {
             puts("bad action");
+            return 1;
+        }
+
+    }
+
+    printf("%d\n", count_lights(lights));
+
+    return 0;
+}
+
+void turn_on(int lights[][1000], int from[], int to[]) {
+    for (int x = from[0]; x <= to[0]; ++x) {
+        for (int y = from[1]; y <= to[1]; ++y) {
+            lights[x][y] = on;
         }
     }
-    return 0;
+}
+
+void turn_off(int lights[][1000], int from[], int to[]) {
+    for (int x = from[0]; x <= to[0]; ++x) {
+        for (int y = from[1]; y <= to[1]; ++y) {
+            lights[x][y] = off;
+        }
+    }
+}
+
+void toggle(int lights[][1000], int from[], int to[]) {
+    for (int x = from[0]; x <= to[0]; ++x) {
+        for (int y = from[1]; y <= to[1]; ++y) {
+            lights[x][y] = !lights[x][y];
+        }
+    }
+}
+
+int count_lights(int lights[][1000]) {
+    int c = 0;
+
+    for (int x = 0; x <= 999; ++x) {
+        for (int y = 0; y <= 999; ++y) {
+            if (lights[x][y] == on) c++;
+        }
+    }
+
+    return c;
 }
