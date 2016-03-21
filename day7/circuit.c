@@ -3,84 +3,126 @@
 #include <string.h>
 #include <ctype.h>
 
-// typedefs
-typedef struct wire wire;
-struct wire {
-    char name[2];
-    unsigned int value;
-    // TODO: where it gets value from
-};
+int parse(char[2]);
 
 int main(int argc, char *argv[]) {
+    int result = parse("d");
+    printf("result: %d\n", result);
+    return 0;
+}
+
+int parse(char target[2]) {
+    printf("PARSING FOR: '%s'\n", target);
+    int type = 0;
+
+    char artarget[5];
+    artarget[0] = '-';
+    artarget[1] = '>';
+    artarget[2] = ' ';
+
+    strcat(artarget, target);
+
+    FILE *input;
+    input = fopen("input.txt", "r");
+    char line[20];
+    if (input == NULL) {
+        puts("Error opening file!");
+        return -2;
+    }
 
     const int num_opers = 5;
-
-    char* line = NULL;
-    size_t len = 0;
-    ssize_t read;
     const char *logics[num_opers];
-
     logics[0] = "OR";
     logics[1] = "AND";
     logics[2] = "NOT";
     logics[3] = "LSHIFT";
     logics[4] = "RSHIFT";
 
-    int type;
+    while (fgets(line, sizeof(line), input)) {
 
-    //TODO: use a linked-list instead of array
-    wire wires[10];
-    int wirecount = 0;
-
-    while ((read = getline(&line, &len, stdin)) != -1) {
         type = 0;
-
         printf("line: %s", line);
 
-        for (int i = 0; i < num_opers; ++i) {
-            if (strstr(line, logics[i])) {
-                //TODO determine which operator it is
-                puts("it was an operator");
-                type = 1;
-            }
-        }
+        if (strstr(line, artarget)) {
+            printf("this is the string you are looking for: %s\n", target);
 
-        if (type == 0) {
-            if (isdigit(line[0])) {
-                puts("it was a number");
-                type = 2;
+            for (int i = 0; i < num_opers; ++i) {
+                if (strstr(line, logics[i])) {
+                    puts("it was an operator");
+                    type = 1;
 
-                int val;
-                char name[2];
-                sscanf(line, "%d -> %s", &val, name );
-                strcpy(wires[wirecount].name, name);
-                wires[wirecount].value = val;
+                    char left[2];
+                    char right[2];
+                    int l, r;
 
-                wirecount++;
-            }
-        }
+                    switch (i) {
+                        case 0:
+                            sscanf(line, "%s OR %s", left, right);
+                            puts("AND!");
+                            puts(left);
+                            puts(right);
+                            l = parse(left);
+                            r = parse(right);
+                            return l | r;
+                        case 1:
+                            sscanf(line, "%s AND %s", left, right);
+                            l = parse(left);
+                            r = parse(right);
+                            return l & r;
+                        case 2:
+                            sscanf(line, "NOT %s", right);
+                            r = parse(right);
+                            return ~r;
+                        case 3:
+                            sscanf(line, "%s LSHIFT %s", left, right);
+                            l = parse(left);
+                            r = parse(right);
+                            return l << r;
+                        case 4:
+                            sscanf(line, "%s RSHIFT %s", left, right);
+                            l = parse(left);
+                            r = parse(right);
+                            return l >> r;
+                    }
 
-        if (type == 0) {
-            puts("it was a wire");
-            type = 3;
-
-            char dest[2]; // get value from here
-            char name[2]; // into here
-            sscanf(line, "%s -> %s", dest, name );
-            strcpy(wires[wirecount].name, name);
-            for (int i = 0; i < wirecount; ++i) {
-                if (strcmp(wires[i].name, dest) == 0) {
-                    wires[wirecount].value = wires[i].value;
+                    break;
                 }
             }
 
-            wirecount++;
+            if (type == 0) {
+                if (isdigit(line[0])) {
+                    printf("it was a number: ");
+                    type = 2;
+
+                    int val;
+                    char name[2]; //XXX keeping this cos too lazy to code it out
+                    sscanf(line, "%d -> %s", &val, name );
+
+                    fclose(input);
+                    printf("%d\n", val);
+                    return val;
+                }
+            }
+
+            if (type == 0) {
+                printf("it was a wire: ");
+                type = 3;
+
+                char whence[2]; // get value from here
+                char name[2]; //XXX keeping this cos too lazy to code it out
+                sscanf(line, "%s -> %s", whence, name );
+                printf("whence >%s<\n", whence);
+
+                int result = parse(whence);
+                fclose(input);
+                printf("%d\n", result);
+                return result;
+            }
+
         }
+
     }
 
-    for (int i = 0; i < wirecount; ++i) {
-        printf("%s:%d\n", wires[i].name, wires[i].value);
-    }
-
-    return 0;
+    fclose(input);
+    return -1;
 }
