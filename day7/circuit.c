@@ -8,6 +8,7 @@ typedef struct wire wire;
 struct wire {
     char name[2];
     unsigned int value;
+    // TODO: where it gets value from
 };
 
 int main(int argc, char *argv[]) {
@@ -27,6 +28,7 @@ int main(int argc, char *argv[]) {
 
     int type;
 
+    //TODO: use a linked-list instead of array
     wire wires[10];
     int wirecount = 0;
 
@@ -59,7 +61,20 @@ int main(int argc, char *argv[]) {
         }
 
         if (type == 0) {
-            puts("it was something else");
+            puts("it was a wire");
+            type = 3;
+
+            char dest[2]; // get value from here
+            char name[2]; // into here
+            sscanf(line, "%s -> %s", dest, name );
+            strcpy(wires[wirecount].name, name);
+            for (int i = 0; i < wirecount; ++i) {
+                if (strcmp(wires[i].name, dest) == 0) {
+                    wires[wirecount].value = wires[i].value;
+                }
+            }
+
+            wirecount++;
         }
     }
 
