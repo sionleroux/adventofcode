@@ -46,7 +46,7 @@ int main(void) {
         }
     } while (c != EOF);
 
-    printf("%dx%d=%d\n", coords[0], coords[1], abs(coords[0]) + abs(coords[1]));
+    printf("%d+%d=%d\n", coords[0], coords[1], abs(coords[0]) + abs(coords[1]));
 
     fclose(input);
     return 0;
@@ -54,8 +54,8 @@ int main(void) {
 
 void turn(int direction) {
     heading += direction;
-    if (heading > 3) heading = 0;
-    if (heading < 0) heading = 3;
+    if (heading > 3) heading = NORTH;
+    if (heading < 0) heading = EAST;
 }
 
 void move(void) {
