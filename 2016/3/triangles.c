@@ -17,8 +17,6 @@ int main(void) {
     }
 
     while ((c = fscanf(input, "%d %d %d", &x, &y, &z)) != EOF) {
-        /* printf("x:%d, y:%d, z:%d\n", x, y, z); */
-        /* printf("%d>%d, %d>%d, %d>%d\n", x + y, z, x + z, y, z + y, z); */
         if ((x + y > z) && (x + z > y) && (z + y > x)) i++;
     }
 
